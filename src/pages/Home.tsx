@@ -52,6 +52,23 @@ export default function Home() {
     setFolderPath("C:/Users/Admin/Documents/ProjectData");
   };
 
+  const handleSetupWebcam = async () => {
+    addLog("Requesting Camera Permissions...");
+    try {
+      // This triggers the browser popup
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      
+      // If we get here, they clicked "Allow".
+      // We stop the stream immediately since we just wanted the permission.
+      stream.getTracks().forEach(track => track.stop());
+      
+      addLog("SUCCESS: Camera access granted.");
+    } catch (err) {
+      console.error(err);
+      addLog("ERROR: Camera access denied or unavailable.");
+    }
+  };
+
   const handleTestCapture = () => addLog("TEST: Triggering Photo Capture...");
   const handleTestCollage = () => addLog("TEST: Generating Collage...");
   const handleTestPrint = () => addLog("TEST: Sending job to printer...");
@@ -111,6 +128,14 @@ export default function Home() {
           />
         </div>
 
+        {/* ---  Webcam Setup --- */}
+        <div className="row">
+            <button className="flex-btn" onClick={handleSetupWebcam}>
+                Initialize Webcam / Grant Permissions
+            </button>
+            {/* Empty spacer or status text could go here if you want split row */}
+        </div>
+
         {/* Row 3: Hardware Tests */}
         <div className="row">
           <button className="flex-btn" onClick={handleTestCapture}>Test Photo Capture</button>
@@ -119,6 +144,7 @@ export default function Home() {
         </div>
 
       </section>
+
 
       {/* 3. System Log & Start Button */}
       <section className="log-panel">

@@ -15,7 +15,8 @@
         "title": "photoboothclient",
         "width":683 ,
         "height": 1214,
-        "resizable": false
+        "resizable": false,
+        "fullscreen": false
       }
     ],
     "security": {
