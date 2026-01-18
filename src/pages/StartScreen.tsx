@@ -18,7 +18,7 @@ export default function StartScreen() {
       console.log("Starting session...");
       setTimeout(() => {
         setIsLoading(false);
-        navigate("/CollageSelect");
+        navigate("/CollageSelector");
       }, 3000);
 
     } catch (error) {
@@ -33,7 +33,7 @@ export default function StartScreen() {
       {/* add svg link here */}
       <div className="logo-placeholder">
          {/* Temporary text to show where SVG goes */}
-         <span>LOGO</span> 
+         <img src="/music icon 4.png" alt="" srcset="" />
       </div>
 
       <div className="action-area">

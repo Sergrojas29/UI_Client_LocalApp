@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import AppLayout from "./AppLayout";
 import Home from "./pages/Home";
+import CollageSelector from "./pages/CollageSelector";
 import StartScreen from "./pages/StartScreen";
 // import Settings from "./pages/Settings";
 // import Profile from "./pages/Profile";
@@ -19,6 +20,10 @@ export const router = createBrowserRouter([
       {
         path: "StartScreen",
         element: <StartScreen />,
+      },
+      {
+        path: "CollageSelector",
+        element: <CollageSelector />,
       },
       // {
       //   path: "about",
