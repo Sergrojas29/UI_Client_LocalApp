@@ -9,7 +9,7 @@ export default function Processing() {
         // 4 Second "Magic" Delay
         const timer = setTimeout(() => {
             // Navigate to the final result page (we'll build this next)
-            navigate("/Result");
+            navigate("/Print");
         }, delay);
 
         return () => clearTimeout(timer);

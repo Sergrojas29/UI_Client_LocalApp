@@ -6,19 +6,18 @@ export default function PhotoCapture() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // 1. Get Settings from previous page (Defaults provided if testing directly)
+  // Get Settings (Defaults provided)
   const { totalPhotos = 3, delaySeconds = 3 } = location.state || {};
 
-  // 2. State
+  // State
   const [currentPhotoIndex, setCurrentPhotoIndex] = useState(1);
   const [timeLeft, setTimeLeft] = useState(delaySeconds);
   const [isCountingDown, setIsCountingDown] = useState(false);
   const [flashActive, setFlashActive] = useState(false);
   
-  // Video Ref for the live feed
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  // 3. Start Camera on Mount
+  // Start Camera
   useEffect(() => {
     async function setupCamera() {
       try {
@@ -34,12 +33,12 @@ export default function PhotoCapture() {
     }
     setupCamera();
     
-    // Auto-start the first countdown after a short buffer
+    // Auto-start
     const startTimer = setTimeout(() => setIsCountingDown(true), 1000);
     return () => clearTimeout(startTimer);
   }, []);
 
-  // 4. Countdown Logic
+  // Countdown Logic
   useEffect(() => {
     if (!isCountingDown) return;
 
@@ -47,29 +46,24 @@ export default function PhotoCapture() {
       const timerId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
       return () => clearTimeout(timerId);
     } else {
-      // Time is 0 -> CAPTURE!
       handleCapture();
     }
   }, [timeLeft, isCountingDown]);
 
   const handleCapture = () => {
     setIsCountingDown(false);
-    
-    // Flash Effect
     setFlashActive(true);
     setTimeout(() => setFlashActive(false), 200);
 
     console.log(`Captured Photo ${currentPhotoIndex}`);
     
-    // Move to next photo or finish
     if (currentPhotoIndex < totalPhotos) {
       setTimeout(() => {
         setCurrentPhotoIndex(prev => prev + 1);
-        setTimeLeft(delaySeconds); // Reset timer
-        setIsCountingDown(true);   // Start next countdown
-      }, 1500); // 1.5s pause to review the "photo" (optional)
+        setTimeLeft(delaySeconds);
+        setIsCountingDown(true);
+      }, 1500); 
     } else {
-      console.log("All photos taken! moving to processing...");
       setTimeout(() => navigate("/Processing"), 1000);
     }
   };
@@ -77,15 +71,14 @@ export default function PhotoCapture() {
   return (
     <div className="capture-container">
       
-      {/* 1. Top Progress Bar (Styled like Tabs) */}
+      {/* 1. Top Progress Bar */}
       <header className="capture-header">
         <div className="tabs-container progress-tabs">
           {Array.from({ length: totalPhotos }, (_, i) => i + 1).map((num) => (
             <div 
               key={num} 
               className={`tab-btn progress-step ${
-                num === currentPhotoIndex ? "active" : 
-                num < currentPhotoIndex ? "completed" : ""
+                num === currentPhotoIndex ? "active" : ""
               }`}
             >
               Photo {num}
@@ -94,35 +87,34 @@ export default function PhotoCapture() {
         </div>
       </header>
 
-      {/* 2. Main Viewfinder */}
+      {/* 2. Main Viewfinder (4:6 Ratio) */}
       <div className="viewfinder">
         <video ref={videoRef} autoPlay playsInline muted className="live-feed" />
         
+        {/* Floating Timer Overlay (Centered) */}
+        <div className="timer-floating-overlay">
+          {isCountingDown ? (
+            <>
+              <span className="floating-countdown">{timeLeft}</span>
+              {/* Floating Progress Bar */}
+              <div className="floating-progress-track">
+                <div 
+                  className="floating-progress-fill"
+                  style={{ 
+                    width: `${(timeLeft / delaySeconds) * 100}%`,
+                    transition: 'width 1s linear'
+                  }}
+                ></div>
+              </div>
+            </>
+          ) : (
+             <span className="floating-status">Smile!</span>
+          )}
+        </div>
+
         {/* Flash Overlay */}
         <div className={`flash-overlay ${flashActive ? "active" : ""}`}></div>
       </div>
-
-      {/* 3. Footer Timer (Dynamic) */}
-      <footer className="capture-footer">
-        <div className="timer-display">
-          {isCountingDown ? (
-            <span className="countdown-number">{timeLeft}</span>
-          ) : (
-             <span className="status-text">Smile!</span>
-          )}
-        </div>
-        
-        {/* Visual Timer Bar (Optional visual flair) */}
-        <div className="timer-bar-container">
-            <div 
-              className="timer-fill"
-              style={{ 
-                width: isCountingDown ? `${(timeLeft / delaySeconds) * 100}%` : '0%',
-                transition: 'width 1s linear'
-              }}
-            ></div>
-        </div>
-      </footer>
 
     </div>
   );

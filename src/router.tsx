@@ -1,11 +1,13 @@
 import { createBrowserRouter } from "react-router-dom";
 import AppLayout from "./AppLayout";
 import Home from "./pages/Home";
-import CollageSelector from "./pages/CollageSelector";
+import CollageSelector from "./pages/CollageSelect";
 import StartScreen from "./pages/StartScreen";
 import PhotoCapture from "./pages/PhotoCapture";
 import Processing  from "./pages/Processing";
 import Result from "./pages/Result";
+import Print from "./pages/Print";
+import Download from "./pages/Download";
 // import Settings from "./pages/Settings";
 // import Profile from "./pages/Profile";
 // import NotFound from "./pages/NotFound";
@@ -25,7 +27,7 @@ export const router = createBrowserRouter([
         element: <StartScreen />,
       },
       {
-        path: "CollageSelector",
+        path: "CollageSelect",
         element: <CollageSelector />,
       }, 
       {
@@ -39,6 +41,14 @@ export const router = createBrowserRouter([
       {
         path: "Result",
         element:<Result/>,
+      },
+      {
+        path: "Print",
+        element:<Print/>,
+      },
+      {
+        path: "Download",
+        element:<Download/>,
       },
       // {
       //   path: "about",

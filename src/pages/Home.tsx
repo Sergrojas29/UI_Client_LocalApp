@@ -5,20 +5,20 @@ import "./Home.css";
 
 export default function Home() {
   const navigate = useNavigate();
-  
+
   // --- State ---
   const [isConnected, setIsConnected] = useState(false);
-  const [folderPath, setFolderPath] = useState<string>(""); 
+  const [folderPath, setFolderPath] = useState<string>("");
   const [serverLogs, setServerLogs] = useState<string[]>(["System initialized..."]);
 
   // --- Handlers ---
-  
+
   const handleConnect = async () => {
     addLog("Attempting connection to local host...");
     setIsConnected(true);
     // try {
     //   const response = await axios.get('/api/health', { timeout: 6000 });
-      
+
     //   if (response.status === 200) {
     //     setIsConnected(true);
     //     addLog(`Connection established: ${response.data.message || 'OK'}`);
@@ -26,7 +26,7 @@ export default function Home() {
     // } catch (error) {
     //   console.error(error);
     //   setIsConnected(false);
-      
+
     //   if (axios.isAxiosError(error)) {
     //     addLog(`Error: ${error.message}`);
     //     if (error.code === 'ECONNABORTED') {
@@ -43,7 +43,7 @@ export default function Home() {
     addLog("Checking full status...");
     // Example second call
     // await axios.get('/api/status');
-    setTimeout(() => addLog("Status: OK | Load: 12%"), 500); 
+    setTimeout(() => addLog("Status: OK | Load: 12%"), 500);
   };
 
   const handleSetFolder = () => {
@@ -57,11 +57,11 @@ export default function Home() {
     try {
       // This triggers the browser popup
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-      
+
       // If we get here, they clicked "Allow".
       // We stop the stream immediately since we just wanted the permission.
       stream.getTracks().forEach(track => track.stop());
-      
+
       addLog("SUCCESS: Camera access granted.");
     } catch (err) {
       console.error(err);
@@ -75,8 +75,8 @@ export default function Home() {
 
   const handleStartApp = () => {
     if (!folderPath) {
-        addLog("WARNING: No folder selected.");
-        return;
+      addLog("WARNING: No folder selected.");
+      return;
     }
     addLog("Launching application...");
     setTimeout(() => {
@@ -91,7 +91,7 @@ export default function Home() {
 
   return (
     <div className="home-container setup-screen">
-      
+
       {/* 1. Header Section */}
       <header className="setup-header">
         <h2>System Initialization</h2>
@@ -103,13 +103,13 @@ export default function Home() {
 
       {/* 2. Control Panel */}
       <section className="control-group">
-        
+
         {/* Row 1: Connection */}
         <div className="row">
           <button className="flex-btn" onClick={handleConnect} disabled={isConnected}>
             {isConnected ? "Connected" : "Connect to Host"}
           </button>
-          
+
           <button className="flex-btn" onClick={handleCheckStatus} disabled={!isConnected}>
             Get Status
           </button>
@@ -118,33 +118,40 @@ export default function Home() {
         {/* Row 2: Folder Selection (Updated) */}
         <div className="row folder-row">
           <button className="flex-btn" onClick={handleSetFolder}>Set Target Folder</button>
-          <input 
-            type="text" 
-            className="folder-display flex-btn" 
-            value={folderPath} 
+          <input
+            type="text"
+            className="folder-display flex-btn"
+            value={folderPath}
             placeholder="No folder selected"
             // Allow manual typing if needed
-            onChange={(e) => setFolderPath(e.target.value)} 
+            onChange={(e) => setFolderPath(e.target.value)}
           />
         </div>
 
         {/* ---  Webcam Setup --- */}
         <div className="row">
-            <button className="flex-btn" onClick={handleSetupWebcam}>
-                Initialize Webcam / Grant Permissions
-            </button>
-            {/* Empty spacer or status text could go here if you want split row */}
+          <button className="flex-btn" onClick={handleSetupWebcam}>
+            Initialize Webcam / Grant Permissions
+          </button>
+          {/* Empty spacer or status text could go here if you want split row */}
         </div>
 
         {/* Row 3: Hardware Tests */}
         <div className="row">
-          <button className="flex-btn" onClick={handleTestCapture}>Test Photo Capture</button>
+          <button className="flex-btn" onClick={handleTestCapture}>Test Capture</button>
           <button className="flex-btn" onClick={handleTestCollage}>Test Collage</button>
           <button className="flex-btn" onClick={handleTestPrint}>Test Print</button>
         </div>
 
       </section>
 
+
+      <div className="start-action-area">
+        {/* Added check: Button disabled if no connection */}
+        <button className="start-app-btn" onClick={handleStartApp} disabled={!isConnected}>
+          Start Application
+        </button>
+      </div>
 
       {/* 3. System Log & Start Button */}
       <section className="log-panel">
@@ -155,12 +162,7 @@ export default function Home() {
           ))}
         </div>
 
-        <div className="start-action-area">
-            {/* Added check: Button disabled if no connection */}
-            <button className="start-app-btn" onClick={handleStartApp} disabled={!isConnected}>
-                Start Application
-            </button>
-        </div>
+
       </section>
 
     </div>

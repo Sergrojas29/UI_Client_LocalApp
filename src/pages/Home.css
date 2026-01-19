@@ -8,6 +8,7 @@
   flex-direction: column;
   gap: 1.5rem;
   background-color: #f1f5f9;
+  width: 90%;
 }
 
 /* --- Header & Light --- */

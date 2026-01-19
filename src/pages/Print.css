@@ -1,0 +1,221 @@
+/* src/pages/Print.css */
+
+.print-page-container {
+  height: 100%;
+  width: 100%;
+  background-color: var(--color-bg);
+  padding: var(--space-md);
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+/* --- ACTIVE ZONE --- */
+.print-active-zone {
+    width: 100%;
+    max-width: 1400px; 
+    height: 60vh; 
+    display: flex; 
+    gap: 0; 
+    border-radius: var(--radius-lg);
+    overflow: hidden; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+
+/* === LEFT COLUMN: PREVIEW === */
+.print-preview-column {
+    flex: 7; 
+    min-width: 0; 
+    background-color: #e2e8f0;
+    position: relative;
+    padding: var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.print-view-toggle {
+    position: absolute;
+    top: 10px; left: 10px; z-index: 20;
+    background-color: rgba(255,255,255,0.8);
+    border: 1px solid var(--color-border);
+    padding: 0.4rem 0.8rem; 
+    border-radius: 20px;
+    font-size: 0.8rem; font-weight: bold;
+    color: var(--color-text-main);
+    cursor: pointer;
+}
+
+.print-gallery-window {
+    width: 100%; height: 100%;
+    scrollbar-width: none; 
+    -ms-overflow-style: none;
+    position: relative;
+}
+.print-gallery-window::-webkit-scrollbar { display: none; }
+
+/* Carousel Logic */
+.print-gallery-window.carousel {
+    display: flex;
+    align-items: center;
+    overflow-x: auto; 
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    padding-bottom: 0;
+    gap: 0 !important;
+    cursor: grab;
+}
+
+.print-gallery-window.carousel .print-gallery-item {
+    min-width: 100%; height: 100%; 
+    display: flex; align-items: center; justify-content: center;
+    scroll-snap-align: center;
+    padding: 1rem; box-sizing: border-box;
+    margin: 0;
+}
+
+.print-gallery-window.carousel .print-gallery-item img {
+    height: 100%; width: auto; max-width: 100%;
+    aspect-ratio: 2/3; object-fit: contain;
+    border-radius: var(--radius-md);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    border: 4px solid white;
+}
+
+/* Grid Logic */
+.print-gallery-window.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    grid-template-rows: 1fr 1fr;   
+    gap: 10px; padding: 4px;
+    overflow-y: auto; 
+}
+
+.print-gallery-window.grid .print-gallery-item {
+    width: 100%; height: 100%;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    border: 2px solid white;
+    position: relative; cursor: pointer;
+}
+
+.print-gallery-window.grid .print-gallery-item img {
+    width: 100%; height: 100%; object-fit: cover;
+}
+
+/* Selection */
+.print-gallery-item.selected img { border-color: var(--color-primary); }
+.print-select-overlay { position: absolute; top: 5px; right: 5px; pointer-events: none; }
+.print-check-badge {
+    background: var(--color-primary); color: white; border-radius: 50%;
+    width: 24px; height: 24px; display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* Dots */
+.print-carousel-dots {
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 12px; z-index: 30;
+    background: rgba(0,0,0,0.4); padding: 8px 12px; border-radius: 12px;
+}
+.print-dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background-color: rgba(255,255,255,0.4);
+    cursor: pointer; border: 1px solid rgba(0,0,0,0.1);
+    transition: all 0.2s;
+}
+.print-dot.active {
+    background-color: white; transform: scale(1.3);
+}
+
+/* === RIGHT COLUMN: ACTIONS === */
+.print-action-sidebar {
+    flex: 3; display: flex; flex-direction: column; 
+    background-color: var(--color-surface);
+    border-left: 1px solid var(--color-border);
+}
+
+.print-action-block {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: var(--space-md); text-align: center;
+}
+.print-block { border-bottom: 1px solid var(--color-border); }
+
+/* Visuals */
+.print-visual-group {
+    display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 5px; margin-bottom: var(--space-sm);
+}
+
+.print-cartoon-placeholder {
+    width: 60px; height: 60px;
+    background-color: #f1f5f9;
+    border: 2px dashed var(--color-text-muted);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.6rem; color: var(--color-text-muted); font-weight: bold;
+    z-index: 2; 
+}
+
+/* Floating Icons (Scoped) */
+.print-social-float { 
+    display: flex; gap: -5px; margin-top: -10px;
+    z-index: 10; position: relative; 
+}
+
+.print-mini-icon {
+    width: 24px; height: 24px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.5rem; font-weight: bold; color: white;
+    border: 1px solid white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    animation: printFloatBob 3s ease-in-out infinite;
+}
+.print-icon-ig { background: #d6249f; animation-delay: 0s; }
+.print-icon-fb { background: #1877f2; animation-delay: 0.5s; }
+.print-icon-sc { background: #fffc00; color: black; animation-delay: 1s; }
+
+@keyframes printFloatBob {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-5px); }
+}
+
+/* Buttons */
+.print-action-block h3 { margin: 0 0 4px 0; font-size: 1rem; color: var(--color-text-main); }
+.print-sub-text { margin: 0 0 var(--space-sm) 0; color: var(--color-text-muted); font-size: 0.75rem; }
+
+.print-btn-base {
+    width: 80%; padding: 0.5rem 1rem; border: none;
+    border-radius: 8px; font-size: 0.8rem; font-weight: 700;
+    text-transform: uppercase; cursor: pointer; transition: all 0.1s;
+}
+
+.print-beveled {
+    box-shadow: 
+        inset 1px 1px 0px rgba(255, 255, 255, 0.3),
+        inset -1px -1px 2px rgba(0, 0, 0, 0.2),
+        0 3px 5px rgba(0,0,0,0.15);
+}
+.print-beveled:active {
+    transform: translateY(1px);
+    box-shadow: 
+        inset 2px 2px 4px rgba(0, 0, 0, 0.2),
+        inset -1px -1px 0px rgba(255, 255, 255, 0.1);
+}
+.print-beveled:disabled {
+    background-color: var(--color-neutral);
+    box-shadow: none; cursor: not-allowed; opacity: 0.6;
+}
+
+.print-primary-btn { background-color: var(--color-text-main); color: white; }
+.print-secondary-btn { background-color: var(--color-primary); color: white; }
+
+/* Modal */
+.print-modal-center {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    z-index: 1000; width: 300px; background: white; padding: 2rem; border-radius: 1rem;
+    text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.4);
+    border: 1px solid var(--color-border);
+}

@@ -1,0 +1,72 @@
+/* src/components/TouchKeyboard.css */
+
+/* The Drawer Container */
+.keyboard-drawer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 2000; /* Highest layer */
+    background-color: #f1f5f9;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+    border-top: 2px solid var(--color-border);
+    animation: slideUp 0.3s ease-out;
+    padding-bottom: 20px;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+/* Header above keys */
+.keyboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: white;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.keyboard-title {
+    font-weight: bold;
+    color: var(--color-text-muted);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.close-kb-btn {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* --- Override Library Styles for Kiosk Look --- */
+.my-custom-keyboard {
+    background-color: #f1f5f9 !important;
+    padding: 10px !important;
+    color: #333;
+}
+
+.my-custom-keyboard .hg-button {
+    height: 60px !important; /* Taller buttons for touch */
+    border-radius: 8px !important;
+    box-shadow: 0 4px 0 rgba(0,0,0,0.1) !important; /* Beveled look */
+    font-weight: bold !important;
+    font-size: 1.2rem !important;
+}
+
+.my-custom-keyboard .hg-button:active {
+    transform: translateY(2px);
+    box-shadow: 0 1px 0 rgba(0,0,0,0.1) !important;
+}
+
+.my-custom-keyboard .hg-button-enter {
+    background-color: var(--color-primary) !important;
+    color: white !important;
+}
