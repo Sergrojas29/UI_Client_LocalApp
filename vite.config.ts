@@ -30,7 +30,7 @@ export default defineConfig(async () => ({
     },
     proxy: {
       '/api': {
-        target: 'http://localhost:3000', // <--- Change this to your local backend's URL/Port
+        target: 'http://localhost:8080', // <--- Change this to your local backend's URL/Port
         changeOrigin: true,
         secure: false,
         // Optional: Rewrite the path if your backend doesn't expect "/api"

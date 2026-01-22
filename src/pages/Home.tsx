@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import axios from "axios"; // Make sure to npm install axios
 import "./Home.css";
 
@@ -8,70 +9,96 @@ export default function Home() {
 
   // --- State ---
   const [isConnected, setIsConnected] = useState(false);
-  const [folderPath, setFolderPath] = useState<string>("");
+  const [folderPath, setFolderPath] = useState<string | null>(null);
   const [serverLogs, setServerLogs] = useState<string[]>(["System initialized..."]);
 
   // --- Handlers ---
 
   const handleConnect = async () => {
     addLog("Attempting connection to local host...");
-    setIsConnected(true);
-    // try {
-    //   const response = await axios.get('/api/health', { timeout: 6000 });
-
-    //   if (response.status === 200) {
-    //     setIsConnected(true);
-    //     addLog(`Connection established: ${response.data.message || 'OK'}`);
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    //   setIsConnected(false);
-
-    //   if (axios.isAxiosError(error)) {
-    //     addLog(`Error: ${error.message}`);
-    //     if (error.code === 'ECONNABORTED') {
-    //        addLog("Error: Connection timed out.");
-    //     }
-    //   } else {
-    //     addLog("Error: Failed to connect.");
-    //   }
-    // }
+    const response = await axios.get('/debug/connect', { timeout: 6000 });
+    const success = response.data.isConnected;
+    if (success) {
+      setIsConnected(true);
+      addLog("Camera has been connected successfully");
+    } else {
+      setIsConnected(false);
+      addLog("Camera Failed to connected");
+    }
   };
 
   const handleCheckStatus = async () => {
-    if (!isConnected) return;
+    if (!isConnected) {
+      addLog("Server not connected");
+      return;
+    };
     addLog("Checking full status...");
-    // Example second call
-    // await axios.get('/api/status');
-    setTimeout(() => addLog("Status: OK | Load: 12%"), 500);
+    const response = await axios.get('/debug/connect', { timeout: 6000 });
+    const success = (response.status == 200) ? true : false;
+    if (success) {
+      addLog(`Target folder m_save_path: ${response.data.m_save_path}`);
+      addLog(`connected: ${response.data.m_connected}`);
+      addLog("_____________Session information _____________:")
+      for (const [key, value] of Object.entries(response.data.session)) {
+        addLog(`${key} : ${value}`);
+      }
+    } else {
+      addLog("Error: no response");
+    }
   };
 
-  const handleSetFolder = () => {
-    addLog("Opening folder dialog...");
-    // Future Tauri dialog code goes here
-    setFolderPath("C:/Users/Admin/Documents/ProjectData");
+  const handleSetFolder = async (filePath: string | null) => {
+    if (filePath == null) {
+      addLog("Error: Enter folder path")
+      return
+    }
+    const response = await axios.post(`/debug/setTargetFolder/${filePath}`);
+    const succuess = response.data.isCreated;
+    if (succuess) {
+      addLog(`${response.data.description} : success`)
+      addLog(`${response.data.service} : ${response.data.file_path} `)
+    } else {
+      addLog("Error setting folder")
+    }
   };
 
   const handleSetupWebcam = async () => {
     addLog("Requesting Camera Permissions...");
     try {
-      // This triggers the browser popup
       const stream = await navigator.mediaDevices.getUserMedia({ video: true });
-
-      // If we get here, they clicked "Allow".
-      // We stop the stream immediately since we just wanted the permission.
       stream.getTracks().forEach(track => track.stop());
-
       addLog("SUCCESS: Camera access granted.");
+
     } catch (err) {
       console.error(err);
       addLog("ERROR: Camera access denied or unavailable.");
     }
   };
 
-  const handleTestCapture = () => addLog("TEST: Triggering Photo Capture...");
-  const handleTestCollage = () => addLog("TEST: Generating Collage...");
-  const handleTestPrint = () => addLog("TEST: Sending job to printer...");
+  const handleTestCapture = async ()  => {
+    addLog("TEST: Triggering Photo Capture...")
+    const response = await axios("/debug/testCapture");
+
+    const success = response.data.isTestCapture
+
+    if(success){
+      addLog("Success photo was captured..")
+    }else{
+      addLog(`Error : ${response.data.error}`)
+    }
+
+  };
+  const handleTestPrint = async ()=>{
+    addLog("TEST: Print...")
+    const response = await axios("/debug/testPrint");
+
+    const success = response.data.isPrinting
+    if(success){
+      addLog("Success printer job was created..")
+    }else{
+      addLog(`Error : ${response.data.error}`)
+    }
+  }
 
   const handleStartApp = () => {
     if (!folderPath) {
@@ -80,8 +107,9 @@ export default function Home() {
     }
     addLog("Launching application...");
     setTimeout(() => {
+      addLog("Starting Program......")
       navigate("/StartScreen");
-    }, 500);
+    }, 200);
   };
 
   const addLog = (msg: string) => {
@@ -92,7 +120,6 @@ export default function Home() {
   return (
     <div className="home-container setup-screen">
 
-      {/* 1. Header Section */}
       <header className="setup-header">
         <h2>System Initialization</h2>
         <div className="connection-indicator">
@@ -101,10 +128,9 @@ export default function Home() {
         </div>
       </header>
 
-      {/* 2. Control Panel */}
       <section className="control-group">
 
-        {/* Row 1: Connection */}
+        {/* Connection */}
         <div className="row">
           <button className="flex-btn" onClick={handleConnect} disabled={isConnected}>
             {isConnected ? "Connected" : "Connect to Host"}
@@ -115,9 +141,10 @@ export default function Home() {
           </button>
         </div>
 
-        {/* Row 2: Folder Selection (Updated) */}
         <div className="row folder-row">
-          <button className="flex-btn" onClick={handleSetFolder}>Set Target Folder</button>
+          <button disabled={folderPath == null ? true : false} className="flex-btn" onClick={() => {
+            handleSetFolder(folderPath);
+          }}>Set Target Folder</button>
           <input
             type="text"
             className="folder-display flex-btn"
@@ -136,10 +163,9 @@ export default function Home() {
           {/* Empty spacer or status text could go here if you want split row */}
         </div>
 
-        {/* Row 3: Hardware Tests */}
+        {/* Hardware Tests */}
         <div className="row">
           <button className="flex-btn" onClick={handleTestCapture}>Test Capture</button>
-          <button className="flex-btn" onClick={handleTestCollage}>Test Collage</button>
           <button className="flex-btn" onClick={handleTestPrint}>Test Print</button>
         </div>
 
@@ -153,7 +179,7 @@ export default function Home() {
         </button>
       </div>
 
-      {/* 3. System Log & Start Button */}
+      {/* System Log & Start Button */}
       <section className="log-panel">
         <h3>System Log</h3>
         <div className="log-window">
