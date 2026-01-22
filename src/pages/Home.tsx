@@ -15,8 +15,8 @@ export default function Home() {
   // --- Handlers ---
 
   const handleConnect = async () => {
-    addLog("Attempting connection to local host...");
-    const response = await axios.get('/debug/connect', { timeout: 6000 });
+    addLog("Attempting connection to local host....");
+    const response = await axios.get('api/debug/connect', { timeout: 6500 });
     const success = response.data.isConnected;
     if (success) {
       setIsConnected(true);
@@ -33,7 +33,7 @@ export default function Home() {
       return;
     };
     addLog("Checking full status...");
-    const response = await axios.get('/debug/connect', { timeout: 6000 });
+    const response = await axios.get('api/debug/status', { timeout: 6000 });
     const success = (response.status == 200) ? true : false;
     if (success) {
       addLog(`Target folder m_save_path: ${response.data.m_save_path}`);
@@ -52,7 +52,7 @@ export default function Home() {
       addLog("Error: Enter folder path")
       return
     }
-    const response = await axios.post(`/debug/setTargetFolder/${filePath}`);
+    const response = await axios(`api/debug/setTargetFolder/${filePath}`);
     const succuess = response.data.isCreated;
     if (succuess) {
       addLog(`${response.data.description} : success`)
@@ -62,6 +62,7 @@ export default function Home() {
     }
   };
 
+  // TODO : Make sure this works in tauri
   const handleSetupWebcam = async () => {
     addLog("Requesting Camera Permissions...");
     try {
@@ -77,7 +78,7 @@ export default function Home() {
 
   const handleTestCapture = async ()  => {
     addLog("TEST: Triggering Photo Capture...")
-    const response = await axios("/debug/testCapture");
+    const response = await axios("api/debug/testCapture");
 
     const success = response.data.isTestCapture
 
@@ -90,7 +91,7 @@ export default function Home() {
   };
   const handleTestPrint = async ()=>{
     addLog("TEST: Print...")
-    const response = await axios("/debug/testPrint");
+    const response = await axios("api/debug/testPrint");
 
     const success = response.data.isPrinting
     if(success){

@@ -25,12 +25,11 @@ export default defineConfig(async () => ({
         }
       : undefined,
     watch: {
-      // 3. tell Vite to ignore watching `src-tauri`
       ignored: ["**/src-tauri/**"],
     },
     proxy: {
       '/api': {
-        target: 'http://localhost:8080', // <--- Change this to your local backend's URL/Port
+        target: 'http://0.0.0.0:8080', // <--- Change this to your local backend's URL/Port
         changeOrigin: true,
         secure: false,
         // Optional: Rewrite the path if your backend doesn't expect "/api"
