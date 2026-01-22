@@ -24,7 +24,8 @@ export default function StartScreen() {
       */}
       <div className="logo-placeholder">
          {/* <img src="/collage_300dpi (7).png" alt="" srcset="" /> */}
-         <img src="/music icon 4.png" alt="" srcset="" />
+         {/* <img src="/music icon 4.png" alt="" srcset="" /> */}
+         <img src="/DSC08582.JPG" alt="" srcset="" />
       </div>
 
       {/* Button Position:
